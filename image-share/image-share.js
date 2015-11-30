@@ -2,21 +2,8 @@ Images = new Mongo.Collection('images');
 console.log('image-share.js', Images.find().count());
 
 if (Meteor.isClient) {
-  // var img_data = [{
-  //   img_src: 'laptops.jpg',
-  //   img_alt: 'some laptops',
-  // },
-  // {
-  //   img_src: 'bass.jpg',
-  //   img_alt: 'a bass player',
-  // },
-  // {
-  //   img_src: 'beard.jpg',
-  //   img_alt: 'some musicians with beards',
-  // },
-  // ];
-  //
-  Template.images.helpers({imgs: Images.find({}, {sort: {rating: -1}})});
+
+  Template.images.helpers({imgs: Images.find({}, {sort: {createdOn: -1, rating: -1}})});
 
   Template.images.events({
     'click .js-image': function(event) {
@@ -30,6 +17,28 @@ if (Meteor.isClient) {
                     {$set: {rating: rating}});
     },
 
+    'click .js-show-image-form': function(event) {
+      $('#image_add_form').modal('show');
+    }
+
+  });
+
+  Template.image_add_form.events({
+    'submit .js-add-image': function(event) {
+      var img_src, img_alt;
+      img_src = event.target.img_src.value;
+      img_alt = event.target.img_alt.value;
+
+      Images.insert({
+        img_src: img_src,
+        img_alt: img_alt,
+        createdOn: new Date()
+      });
+
+      $('#image_add_form').modal('hide');
+
+      return false;
+    }
   });
 }
 
