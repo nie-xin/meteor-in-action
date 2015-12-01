@@ -5,9 +5,14 @@
 <body>
   {{> image_add_form}}
 
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      {{> loginButtons}}
+    </div>
+  </nav>
+
   <div class="container">
-    <h1>Welcome Xnie!</h1>
-    {{> loginButtons}}
+    <h1>Welcome {{username}}!</h1>
     {{> images}}
   </div>
 </body>
@@ -36,7 +41,9 @@
 </template>
 
 <template name="images">
+  {{#if currentUser}}
   <button class="btn btn-success js-show-image-form">Add image</button>
+  {{/if}}
   <div class="row">
   {{#each imgs}}
     <div class="col-xs-12 col-md-4">
