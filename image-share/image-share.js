@@ -2,12 +2,24 @@ Images = new Mongo.Collection('images');
 console.log('image-share.js', Images.find().count());
 
 if (Meteor.isClient) {
+  Accounts.ui.config({
+    passwordSignupFields: 'USERNAME_AND_EMAIL'
+  });
 
-  Template.images.helpers({imgs: Images.find({}, {sort: {createdOn: -1, rating: -1}})});
+  Template.images.helpers({
+    imgs: Images.find({}, {sort: {createdOn: -1, rating: -1}}),
+    getUser: function(user_id) {
+      var user = Meteor.users.findOne({_id: user_id});
+      if (user)
+        return user.username;
+      else
+        return 'anonymous user';
+    }
+  });
 
   Template.body.helpers({username: function() {
     if (Meteor.user()) {
-      return Meteor.user().emails[0].address;
+      return Meteor.user().username;
     } else {
       return 'Anonymous user';
     }
@@ -37,11 +49,14 @@ if (Meteor.isClient) {
       img_src = event.target.img_src.value;
       img_alt = event.target.img_alt.value;
 
-      Images.insert({
-        img_src: img_src,
-        img_alt: img_alt,
-        createdOn: new Date()
-      });
+      if (Meteor.user()) {
+        Images.insert({
+          img_src: img_src,
+          img_alt: img_alt,
+          createdOn: new Date(),
+          createdBy: Meteor.user()._id,
+        });
+      }
 
       $('#image_add_form').modal('hide');
 
