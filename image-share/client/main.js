@@ -1,5 +1,16 @@
-Session.set('imageLimit', 6);
+Router.route('/', function () {
+  this.render('navbar');
+});
 
+Router.route('/images', function () {
+  this.render('images');
+});
+
+
+
+
+
+Session.set('imageLimit', 6);
 var lastScrollTop = 0;
 $(window).scroll(function(event) {
   if ($(window).scrollTop() + $(window).height() > $(document).height() -  100) {
