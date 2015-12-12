@@ -1,13 +1,33 @@
-Router.route('/', function () {
-  this.render('navbar');
-});
+Router.configure({
+  layoutTemplate: 'ApplicationLayout'
+})
 
-Router.route('/images', function () {
-  this.render('images');
-});
+Router.route('/', function() {
+  this.render('welcome', {
+    to: "main"
+  })
+})
 
+Router.route('/images', function() {
+  this.render('navbar', {
+    to: 'navbar'
+  })
+  this.render('images', {
+    to: 'main'
+  })
+})
 
-
+Router.route('/image/:_id', function() {
+  this.render('navbar', {
+    to: 'navbar'
+  })
+  this.render('image', {
+    to: 'main',
+    data: function() {
+      return Images.findOne({_id: this.params._id})
+    }
+  })
+})
 
 
 Session.set('imageLimit', 6);
@@ -59,20 +79,22 @@ Template.images.helpers({
     } else {
       return false;
     }
-  }
+  },
 });
 
-Template.body.helpers({username: function() {
-  if (Meteor.user()) {
-    return Meteor.user().username;
-  } else {
-    return 'Anonymous user';
-  }
-}});
+Template.body.helpers({
+  username: function() {
+    if (Meteor.user()) {
+      return Meteor.user().username;
+    } else {
+      return 'Anonymous user';
+    }
+  },
+});
 
 Template.images.events({
   'click .js-image': function(event) {
-    $(event.target).css("width", "50px");
+    $(event.target).css('width', '50px');
   },
 
   'click .js-rate-image': function(event) {
