@@ -10,12 +10,8 @@ if (Meteor.isClient) {
 
   Template.editor.helpers({
     docid: function() {
-      var doc = Documents.findOne();
-      if (doc) {
-        return doc._id;
-      } else {
-        return undefined;
-      }
+      setupCurrentDocument();
+      return Session.get('docid');
     },
 
     config: function() {
@@ -46,7 +42,6 @@ if (Meteor.isClient) {
       users = new Array();
       var i = 0;
       for (var user_id in eusers.users) {
-        console.log(eusers.users[user_id])
         users[i] = fixObjectKeys(eusers.users[user_id]);
         i++;
       }
@@ -129,4 +124,14 @@ function fixObjectKeys(obj) {
   }
 
   return newObj;
+}
+
+function setupCurrentDocument() {
+  var doc;
+  if (!Session.get('docid')) {
+    doc = Documents.findOne();
+    if (doc) {
+      Session.set('docid', doc._id);
+    }
+  }
 }
