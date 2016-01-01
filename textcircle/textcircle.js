@@ -47,7 +47,7 @@ if (Meteor.isClient) {
       }
 
       return users;
-    }
+    },
   });
 
   //events
@@ -57,9 +57,13 @@ if (Meteor.isClient) {
       if (!Meteor.user()) {
         alert('You need to login first');
       } else {
-        Meteor.call('addDoc');
+        Meteor.call('addDoc', function(err, res) {
+          if (!err) {
+            Session.set('docid', res);
+          }
+        });
       }
-    }
+    },
   });
 }
 
@@ -82,7 +86,8 @@ Meteor.methods({
         createdOn: new Date(),
         title: 'my new doc',
       };
-      Documents.insert(doc);
+      var id = Documents.insert(doc);
+      return id;
     }
   },
 
