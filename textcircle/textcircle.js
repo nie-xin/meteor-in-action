@@ -50,6 +50,12 @@ if (Meteor.isClient) {
     },
   });
 
+  Template.navbar.helpers({
+    documents: function() {
+      return Documents.find({});
+    },
+  });
+
   //events
   Template.navbar.events({
     'click .js-add-doc': function(event) {
@@ -63,6 +69,10 @@ if (Meteor.isClient) {
           }
         });
       }
+    },
+
+    'click .js-load-doc': function(event) {
+      Session.set('docid', this._id);
     },
   });
 }
@@ -118,7 +128,7 @@ Meteor.methods({
     eusers.users[this.userId] = user;
 
     EditingUsers.upsert({_id: eusers._id}, eusers);
-  }
+  },
 });
 
 function fixObjectKeys(obj) {

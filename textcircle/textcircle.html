@@ -35,6 +35,19 @@
             New document
           </a>
         </li>
+
+        <li role="presentation" class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            Documents <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            {{#each documents}}
+              <li>
+                <a href="#" class="js-load-doc">{{title}}</a>
+              </li>
+            {{/each}}
+          </ul>
+        </li>
        </ul>
 
       <div class="navbar-text navbar-right">{{> loginButtons align='right'}}</div>
