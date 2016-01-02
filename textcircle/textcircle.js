@@ -93,17 +93,35 @@ if (Meteor.isClient) {
       Session.set('docid', this._id);
     },
   });
+
+  Template.docMeta.events({
+    'click .js-tog-private': function(event) {
+      var doc = {
+        _id: Session.get('docid'),
+        isPrivate: event.target.checked,
+      };
+      Meteor.call('updateDocPrivacy', doc);
+    },
+  });
 }
 
 if (Meteor.isServer) {
   Meteor.startup(function() {
     if (!Documents.findOne()) {
-      Documents.insert({title: 'my new doc'});
+      Documents.insert({title: 'new doc'});
     }
   });
 }
 
 Meteor.methods({
+  updateDocPrivacy: function(doc) {
+    var realDoc = Documents.findOne({_id: doc._id, owner: this.userId});
+    if (realDoc) {
+      realDoc.isPrivate = doc.isPrivate;
+      Documents.update({_id: doc._id}, realDoc);
+    }
+  },
+
   addDoc: function() {
     var doc;
     if (!this.userId) {
