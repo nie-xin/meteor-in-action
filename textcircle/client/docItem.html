@@ -21,6 +21,8 @@
       </div>
     </div>
 
+    {{> commentList}}
+
     {{> insertCommentForm}}
   </div> <!-- end of docItem container -->
 </template>
@@ -56,9 +58,16 @@
   {{/with}}
 </template>
 
-<!-- <template name="insertCommentForm">
-  {{> quickForm collection="Comments" id="insertCommentForm" type="method" meteormethod="addComment"}}
-</template> -->
+<template name="commentList">
+  {{#each comments}}
+    <ul>
+      <li>
+        {{title}}
+        <p>{{body}}</p>
+      </li>
+    </ul>
+  {{/each}}
+</template>
 
 
 <template name="insertCommentForm">
@@ -66,10 +75,11 @@
     <fieldset>
       <legend>Comment</legend>
       {{> afQuickField name='title'}}
-      {{> afQuickField name='body' rows=6 value='write your comment here'}}
-      {{> afQuickField name='docid' rows=6 value=docid type='hidden'}}
-    </fieldset>
+      {{> afQuickField name='body' rows=6 value="Write your comment here"}}
+      {{> afQuickField name='docid' value=docid type="hidden"}}
+      {{> afQuickField name='owner' value=123 type="hidden"}}
 
+    </fieldset>
     <button type="submit" class="btn btn-primary">Insert</button>
   {{/autoForm}}
 </template>

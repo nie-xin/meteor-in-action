@@ -52,9 +52,10 @@ Meteor.methods({
   },
 
   addComment: function(comment) {
+    console.log('inside add comment')
     if (this.userId) {
-      comment.createdOn = new Date();
-      comment.userId = this.userId;
+      comment.owner = this.userId;
+      console.log('add comment run: ', comment)
       return Comments.insert(comment);
     } else {
       return;
