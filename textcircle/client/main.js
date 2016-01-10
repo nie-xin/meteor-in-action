@@ -1,6 +1,22 @@
 Meteor.subscribe('documents');
 Meteor.subscribe('editingUsers');
 
+Router.configure({
+  layoutTemplate: 'ApplicationLayout'
+});
+
+Router.route('/', function() {
+  this.render('navbar', {to: 'header'});
+  this.render('docList', {to: 'main'});
+});
+
+Router.route('/documents/:_id', function() {
+  Session.set('docid', this.params._id);
+  this.render('navbar', {to: 'header'});
+  this.render('docItem', {to: 'main'});
+});
+
+
 // update session every 1 second
 Meteor.setInterval(function() {
   Session.set('current_date', new Date());
@@ -83,6 +99,12 @@ Template.editableText.helpers({
   },
 });
 
+Template.insertCommentForm.helpers({
+  docid: function() {
+    return Session.get('docid');
+  }
+});
+
 //events
 Template.navbar.events({
   'click .js-add-doc': function(event) {
@@ -132,3 +154,10 @@ function setupCurrentDocument() {
     }
   }
 }
+
+
+Template.docList.helpers({
+  documents: function() {
+    return Documents.find();
+  },
+});
